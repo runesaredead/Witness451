@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Witness: 451</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: rgb(10, 10, 15);
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            margin-top: 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+        
+        .art-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 50px;
+            width: 100%;
+            height: 60vh;
+            min-height: 400px;
+            position: relative;
+            z-index: 1;
+        }
+        
+                 .art-canvas {
+             max-width: 90vw;
+             max-height: 60vh;
+             width: auto;
+             height: auto;
+             transform: scale(2);
+             transform-origin: center;
+         }
+        
+        .links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .link-button {
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            min-width: 150px;
+            text-align: center;
+        }
+        
+        .link-button:hover {
+            background: linear-gradient(135deg, #3a3a3a, #2a2a2a);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+        
+        .link-button.coming-soon {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .link-button.coming-soon:hover {
+            transform: none;
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: none;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .art-container {
+                height: 50vh;
+                min-height: 300px;
+            }
+            
+            .links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .link-button {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Witness: 451</h1>
+    </div>
+    
+    <div class="art-container" id="artContainer">
+        <!-- Single large eyeball will be added here -->
+    </div>
+    
+    <div class="links">
+        <a href="#" class="link-button" onclick="openLore(); return false;">Lore</a>
+        <a href="#" class="link-button" onclick="getWL(); return false;">Get WL</a>
+        <a href="#" class="link-button" onclick="openDiscord(); return false;">Discord</a>
+        <a href="#" class="link-button" onclick="openTwitter(); return false;">X (Twitter)</a>
+        <a href="#" class="link-button coming-soon">Trade (coming soon)</a>
+    </div>
+
+    <script src="eyeball-generator-native.js"></script>
+    <script>
+        // First cut seed numbers
+        const firstCutSeeds = [
+            856167, 799727, 34085, 648628, 297052, 105200, 903188, 17412, 137402, 484656,
+            73555, 993438, 61677, 534211, 147086, 505206, 903130, 413804, 805274, 410956,
+            580839, 312028, 778708, 695070, 432164, 782967, 947756, 92679, 364364, 714379,
+            781427, 4189, 720280, 998357, 965250, 982925, 144905, 56267, 221322, 516401,
+            403801, 511906, 572249, 242992, 319833, 39881, 936347, 92721, 700491, 902365,
+            573872, 169717, 449266, 535266, 61746, 816416, 716712, 219890, 802166, 548164,
+            600871, 204401, 738536, 779430, 495622, 190462, 393557, 817549, 113680, 302035,
+            312968, 934537, 15642, 333572, 618805, 912854, 225155, 677351, 549976, 618592,
+            711242, 79892, 438440, 666942, 780160, 667254, 481955, 945334, 40640, 580770,
+            475152, 865682, 942587, 128743, 297836, 433298, 297836, 708531, 974900, 230172,
+            559948, 382022, 314412, 528227, 191509, 543274, 584706, 994101, 823049, 285941,
+            97792, 225348, 997479, 115112, 475718, 346450, 430027, 780299, 927790, 575517,
+            82946, 863824, 196337, 696552, 500624, 305149, 533257, 94698, 781859, 187786,
+            157349, 253263, 778946, 511029, 267760, 407362, 266607, 943678, 984114, 916143,
+            506549, 521074, 608981, 116552, 433253, 329779, 618597, 589531, 777262, 861413,
+            44262, 517981, 149929, 72142, 452133, 704381, 986987, 987407, 881955, 149766,
+            805069, 275876, 820925, 932766, 25136, 752013, 682094, 907666, 521374, 534141,
+            397010, 239279, 992699, 668067, 498130, 851603, 472481, 372454, 753541, 650590,
+            421207, 556923, 801640, 685695, 203862, 684247, 315279, 879504, 254566, 224762,
+            386908, 373668, 18391, 100414, 452278, 131437, 523111, 72829, 699709, 934800,
+            203166, 510549, 957745, 972533, 346277, 942894, 991591, 296690, 359629, 328845,
+            84383, 912520, 562310, 281570, 794070, 696583, 987586, 452297, 342363, 758126,
+            278118, 995948, 664716, 582763, 127398, 371529, 510090, 723781, 116542, 926385,
+            537601, 675921, 998752, 95711, 86072, 764156, 696470, 196609, 727935, 755473,
+            105394, 106163, 891207, 227831, 100732, 157269, 332833, 379634, 4588, 478195,
+            346270, 656103, 427041, 248544, 920307, 248544, 920307, 346380, 53072, 926816,
+            739903, 204411, 894870, 482466, 518196, 86483, 618710, 794656, 214674, 941385,
+            344133, 269652, 295484, 351568, 614447, 113155, 618788, 113155, 645758, 519607,
+            638903, 362259, 619425, 125618, 330586, 725254, 679437, 849359, 582303, 657577,
+            940729, 786500, 664041, 327345, 341572, 666615, 798134, 943955, 819751, 882297,
+            103239, 874566, 139890, 27803, 304346, 983414, 355772, 872595, 559659, 711992,
+            768706, 416341, 709052, 598233, 947077, 260830, 559480, 168649, 142775, 521944,
+            550287, 887845, 741333, 776819, 818030, 76328, 366870, 549170, 746127, 175510,
+            363813, 621349, 364705, 698886, 708731, 336088, 82468, 822947, 984019, 492057,
+            535910, 136894, 802998, 778761, 460094, 344258, 625393, 737725, 505557, 673923,
+            510489, 837794, 386388, 84670, 964532, 120597, 54523, 910487, 749591, 128602,
+            361989, 518040, 887239, 759298, 974425, 22383, 840338, 650001, 788788, 975772,
+            813540, 108226, 330961, 60067, 96526, 304544, 707625, 544357, 650081, 529540,
+            933691, 941767, 984133, 407425, 542674, 465417, 837837, 335777, 658183, 12910,
+            401057, 761816, 988463, 466062, 577200, 443042, 778261, 183048, 655161, 794875,
+            256166, 322156, 920976, 478104, 456959, 437708, 126893, 969282, 229392, 298723,
+            810048, 716315, 518993, 466759, 335035, 567221, 910696, 520988, 1491, 807558,
+            119407, 953769, 345427, 740751, 392087, 142676, 197409, 263495, 212329, 428766,
+            670466, 472998, 429565, 630148, 922957, 788839, 569667, 99817, 309657, 485152,
+            665100, 76697, 203242, 991753, 180264, 906788, 913456, 799902, 390688, 123280,
+            651358, 729862, 670116, 998088, 588230, 280714, 818872, 318220, 151729, 147005,
+            426709, 683059, 992062, 25133, 433899, 284507, 988141, 219543, 56461, 346006,
+            229471, 177083, 213190, 373384, 165166, 286074, 418703, 788790, 12127, 720626,
+            164463, 8700561, 750750, 10961, 375174, 264850, 683205, 481786, 496354, 200402,
+            644771, 751689, 264934, 698294, 618022, 660404, 409758, 467747, 978442, 703802,
+            572309, 653866, 146797, 146767, 509894, 177333, 200243, 479716, 437914, 397920,
+            620503, 801525, 311869, 131729, 617342, 837236, 878387, 260495, 204681, 375117,
+            764150, 413956
+        ];
+        
+        let currentEyeball = null;
+        let animationId = null;
+        let canvas = null;
+        let ctx = null;
+        
+        // Create single large eyeball
+        function generateArt() {
+            const artContainer = document.getElementById('artContainer');
+            
+            // Clear existing animation
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            
+                         // Create canvas if it doesn't exist
+             if (!canvas) {
+                 canvas = document.createElement('canvas');
+                 canvas.width = 600;
+                 canvas.height = 600;
+                 canvas.className = 'art-canvas';
+                 artContainer.appendChild(canvas);
+                 ctx = canvas.getContext('2d');
+             }
+             
+                          // Generate first eyeball
+             const randomIndex = Math.floor(Math.random() * firstCutSeeds.length);
+             const seed = firstCutSeeds[randomIndex];
+             currentEyeball = new Eyeball(seed, 600, 600);
+             
+             // Start initial animation
+             function animate() {
+                 if (currentEyeball && ctx) {
+                     currentEyeball.draw(ctx);
+                     animationId = requestAnimationFrame(animate);
+                 }
+             }
+             
+             animate();
+        }
+        
+        // Quick cycling - replace eyeball frequently
+        function quickCycle() {
+            function replaceEyeball() {
+                if (!currentEyeball || !ctx) return;
+                
+                                 // Cancel current animation
+                 if (animationId) {
+                     cancelAnimationFrame(animationId);
+                 }
+                 
+                 // Animate blink effect - eyelids closing from top and bottom to center
+                 // Vary blink speed: mostly slow, occasionally rapid
+                 const randomBlink = Math.random();
+                 let blinkDuration;
+                 if (randomBlink < 0.15) {
+                     // 15% chance of rapid blink (double blink or quick)
+                     blinkDuration = 180;
+                 } else if (randomBlink < 0.25) {
+                     // 10% chance of medium blink
+                     blinkDuration = 350;
+                 } else {
+                     // 75% chance of slow, natural blink
+                     blinkDuration = 450 + Math.random() * 150; // 450-600ms
+                 }
+                 const startTime = Date.now();
+                 let newEyeball = null;
+                 let eyeballGenerated = false;
+                 const centerY = 300; // Center of the 600px canvas
+                 
+                 function animateBlink() {
+                     const elapsed = Date.now() - startTime;
+                     const progress = elapsed / blinkDuration;
+                     
+                     if (progress < 0.5) {
+                         // Closing phase (0 to 0.5)
+                         const closeProgress = progress * 2; // 0 to 1
+                         const eyelidDistance = closeProgress * centerY; // How far eyelids have moved toward center
+                         
+                         // Draw current eyeball
+                         if (currentEyeball) {
+                             currentEyeball.draw(ctx);
+                         }
+                         
+                         // Draw top eyelid coming down from top
+                         ctx.fillStyle = 'rgb(10, 10, 15)';
+                         ctx.fillRect(0, 0, 600, eyelidDistance);
+                         
+                         // Draw bottom eyelid coming up from bottom
+                         ctx.fillRect(0, 600 - eyelidDistance, 600, eyelidDistance);
+                         
+                     } else {
+                         // Opening phase (0.5 to 1)
+                         const openProgress = (progress - 0.5) * 2; // 0 to 1
+                         const eyelidDistance = centerY * (1 - openProgress); // Eyelids moving back to edges
+                         
+                         // Generate new eyeball at midpoint if not done yet
+                         if (!eyeballGenerated) {
+                             const randomIndex = Math.floor(Math.random() * firstCutSeeds.length);
+                             const seed = firstCutSeeds[randomIndex];
+                             newEyeball = new Eyeball(seed, 600, 600);
+                             currentEyeball = newEyeball;
+                             eyeballGenerated = true;
+                         }
+                         
+                         // Draw new eyeball
+                         if (newEyeball) {
+                             newEyeball.draw(ctx);
+                         }
+                         
+                         // Draw eyelids moving back to edges
+                         ctx.fillStyle = 'rgb(10, 10, 15)';
+                         // Top eyelid going back up
+                         ctx.fillRect(0, 0, 600, eyelidDistance);
+                         // Bottom eyelid going back down
+                         ctx.fillRect(0, 600 - eyelidDistance, 600, eyelidDistance);
+                     }
+                     
+                     if (progress < 1) {
+                         requestAnimationFrame(animateBlink);
+                     } else {
+                         // Blink complete, resume normal animation
+                         // Make sure we don't have multiple loops running
+                         if (animationId) {
+                             cancelAnimationFrame(animationId);
+                         }
+                         
+                         function animate() {
+                             if (currentEyeball && ctx) {
+                                 currentEyeball.draw(ctx);
+                                 animationId = requestAnimationFrame(animate);
+                             }
+                         }
+                         animate();
+                     }
+                 }
+                 
+                 animateBlink();
+            }
+            
+            // Start the cycle
+            replaceEyeball();
+            
+            // Continue cycling with varied timing like natural blinking
+            function scheduleNextBlink() {
+                const randomDelay = Math.random();
+                let nextBlinkDelay;
+                
+                if (randomDelay < 0.1) {
+                    // 10% chance of quick succession (like nervous blinking)
+                    nextBlinkDelay = 800 + Math.random() * 400; // 0.8-1.2s
+                } else if (randomDelay < 0.2) {
+                    // 10% chance of longer pause (like focused staring)
+                    nextBlinkDelay = 3000 + Math.random() * 2000; // 3-5s
+                } else {
+                    // 80% chance of normal timing
+                    nextBlinkDelay = 1500 + Math.random() * 1000; // 1.5-2.5s
+                }
+                
+                setTimeout(() => {
+                    replaceEyeball();
+                    scheduleNextBlink(); // Schedule the next one
+                }, nextBlinkDelay);
+            }
+            
+            scheduleNextBlink();
+        }
+        
+        // Link functions
+        function openDiscord() {
+            // Open Discord server
+            window.open('https://discord.gg/qKVWnjtAnx', '_blank');
+        }
+        
+        function openTwitter() {
+            // Open Runesaredead Twitter/X account
+            window.open('https://x.com/Runesaredead', '_blank');
+        }
+        
+        function openLore() {
+            // Open local lore page
+            window.location.href = 'lore.html';
+        }
+        
+        function getWL() {
+            // Open whitelist application form
+            window.open('https://forms.gle/FpPpQ1JUNkeFvWct7', '_blank');
+        }
+        
+        // Generate art when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            generateArt();
+            // Start quick cycle after initial load
+            setTimeout(quickCycle, 2000);
+        });
+    </script>
+</body>
+</html>
